@@ -1,0 +1,2 @@
+# CryptoBugWeekly
+Week 7
