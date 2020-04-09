@@ -15,15 +15,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.edu.unsw.infs3634.cryptobag.entities.Coin;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder> {
     private MainActivity mParentActivity;
     private List<Coin> mCoins;
     private boolean mTwoPane;
+
+
+
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+
         @Override
         public void onClick(View v) {
             Coin coin = (Coin) v.getTag();
+
             if(mTwoPane) {
                 Bundle arguments = new Bundle();
                 arguments.putString(DetailFragment.ARG_ITEM_ID, coin.getId());
@@ -71,6 +79,13 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
         holder.change.setText((coin.getPercentChange24h()) + " %");
         holder.itemView.setTag(coin);
         holder.itemView.setOnClickListener(mOnClickListener);
+    }
+
+    //Clear list, add new list
+    public void setCoins(List<Coin> coins){
+        mCoins.clear();
+        mCoins.addAll(coins);
+        notifyDataSetChanged();
     }
 
     // Return the size of your dataset (invoked by the layout manager)
