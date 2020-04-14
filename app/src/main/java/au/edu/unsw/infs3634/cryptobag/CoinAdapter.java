@@ -11,13 +11,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import au.edu.unsw.infs3634.cryptobag.entities.Coin;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder> {
     private MainActivity mParentActivity;
