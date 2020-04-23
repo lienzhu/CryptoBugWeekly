@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
     private boolean mTwoPane;
     ProgressDialog progressDialog;
-    private String TAG = "MainActivity";
+    private String TAG = "MainActivity.class";
     private CoinAdapter mAdapter;
     private CoinDatabase mDb;
 
@@ -50,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
         mDb = Room.databaseBuilder(getApplicationContext(), CoinDatabase.class, "database").build();
         //Retrieve from database
         new MyTaskGetDB().execute();
+        Log.d(TAG, "on GETDB execute: SUCCESS");
         new MyTask().execute();
+
 
     }
         private class MyTask extends AsyncTask<Void, Void, List<Coin>> {
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 List<Coin> coins = coinsResponse.body().getData();
                 mDb.coinDao().deleteAll(mDb.coinDao().getCoins().toArray(new Coin[mDb.coinDao().getCoins().size()]));
                 mDb.coinDao().insertAll(coins.toArray(new Coin[coins.size()]));
+                    Log.d(TAG, "on Database add: SUCCESS");
                 return coins;
 
                 } catch (IOException e) {
@@ -95,11 +98,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected List<Coin> doInBackground(Void... voids) {
             return mDb.coinDao().getCoins();
+
         }
 
         @Override
         protected void onPostExecute(List<Coin> coins) {
             mAdapter.setCoins(coins);
+            Log.d(TAG, "on set adapter to coins: SUCCESS");
         }
     }
 }
