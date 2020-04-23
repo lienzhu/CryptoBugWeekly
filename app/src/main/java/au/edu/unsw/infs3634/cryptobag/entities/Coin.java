@@ -1,13 +1,18 @@
 package au.edu.unsw.infs3634.cryptobag.entities;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-//import org.apache.commons.lang.builder.ToStringBuilder;
 
-public class Coin implements Serializable
-{
+@Entity
+public class Coin implements Serializable {
 
+    @PrimaryKey
+    @NonNull
     @SerializedName("id")
     @Expose
     private String id;
@@ -60,13 +65,11 @@ public class Coin implements Serializable
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public Coin() {
     }
 
     /**
-     *
      * @param symbol
      * @param volume24a
      * @param priceUsd
@@ -311,10 +314,4 @@ public class Coin implements Serializable
         this.msupply = msupply;
         return this;
     }
-
-//    @Override
-//    public String toString() {
-//        return new ToStringBuilder(this).append("id", id).append("symbol", symbol).append("name", name).append("nameid", nameid).append("rank", rank).append("priceUsd", priceUsd).append("percentChange24h", percentChange24h).append("percentChange1h", percentChange1h).append("percentChange7d", percentChange7d).append("priceBtc", priceBtc).append("marketCapUsd", marketCapUsd).append("volume24", volume24).append("volume24a", volume24a).append("csupply", csupply).append("tsupply", tsupply).append("msupply", msupply).toString();
-//    }
-
 }

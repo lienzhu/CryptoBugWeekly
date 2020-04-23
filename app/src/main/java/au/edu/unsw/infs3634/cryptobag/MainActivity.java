@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,20 +27,18 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     private String TAG = "MainActivity";
     private CoinAdapter mAdapter;
+    private CoinDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         //Widescreen determinant
         if (findViewById(R.id.detail_container) != null) {
             mTwoPane = true;
         }
         //Layout code
-
         RecyclerView mRecyclerView = findViewById(R.id.rvList);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -47,10 +46,13 @@ public class MainActivity extends AppCompatActivity {
          mAdapter = new CoinAdapter(this, new ArrayList<Coin>(), mTwoPane);
         mRecyclerView.setAdapter(mAdapter);
 
+        //Database build
+        mDb = Room.databaseBuilder(getApplicationContext(), CoinDatabase.class, "database").build();
+        //Retrieve from database
+        new MyTaskGetDB().execute();
         new MyTask().execute();
 
     }
-
         private class MyTask extends AsyncTask<Void, Void, List<Coin>> {
             @Override
             protected List<Coin> doInBackground(Void... voids) {
@@ -69,14 +71,14 @@ public class MainActivity extends AppCompatActivity {
 
                 Response<CoinLoreResponse> coinsResponse = coinsCall.execute();
                 List<Coin> coins = coinsResponse.body().getData();
-
+                mDb.coinDao().deleteAll(mDb.coinDao().getCoins().toArray(new Coin[mDb.coinDao().getCoins().size()]));
+                mDb.coinDao().insertAll(coins.toArray(new Coin[coins.size()]));
                 return coins;
 
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
                 }
-
             }
 
             @Override
@@ -87,6 +89,19 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+
+    private class MyTaskGetDB extends AsyncTask<Void, Void, List<Coin>>{
+
+        @Override
+        protected List<Coin> doInBackground(Void... voids) {
+            return mDb.coinDao().getCoins();
+        }
+
+        @Override
+        protected void onPostExecute(List<Coin> coins) {
+            mAdapter.setCoins(coins);
+        }
+    }
 }
 /**
 
